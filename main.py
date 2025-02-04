@@ -46,7 +46,7 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
 
                 # Replace the USE statement with the target database name
                 sql_script = sql_script.replace(
-                    "USE [T0db01]", f"USE [{database}]")
+                    "USE [previous_databse]", f"USE [{database}]")
 
                 # Execute the SQL script in batches
                 try:
@@ -66,13 +66,13 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
 
 
 # Input parameters
-server = "185.252.86.138"  # Replace with your SQL Server name or IP
-database = "dbname"  # Replace with your target database name
-username = "username"  # Replace with your SQL Server username
-password = "password"  # Replace with your SQL Server password
+server = "your_server"  # Replace with your SQL Server name or IP
+database = "your_database"  # Replace with your target database name
+username = "your_username"  # Replace with your SQL Server username
+password = "your_password"  # Replace with your SQL Server password
 
 # Replace with the path to your .sql files
-sql_files_directory = r"path"
+sql_files_directory = r"your_sql_files_directory"
 
 # Call the function
 create_stored_procedures(server, database, username,
