@@ -1,6 +1,7 @@
 import os
 import pyodbc
 import chardet
+import re
 
 
 def detect_encoding(file_path):
@@ -11,14 +12,15 @@ def detect_encoding(file_path):
 
 
 def execute_sql_batches(cursor, sql_script):
-    # Split the script into batches by 'GO' (case-insensitive, surrounded by newlines)
-    batches = [batch.strip()
-               for batch in sql_script.split('\nGO\n') if batch.strip()]
+    # Normalize line endings and split by GO surrounded by newlines (case-insensitive)
+    batches = re.split(r'(?im)^\s*GO\s*$', sql_script, flags=re.MULTILINE)
     for batch in batches:
-        try:
-            cursor.execute(batch)
-        except Exception as e:
-            print(f"Error executing batch: {batch[:100]}... \nError: {e}")
+        batch = batch.strip()
+        if batch:
+            try:
+                cursor.execute(batch)
+            except Exception as e:
+                print(f"Error executing batch:\n{batch[:100]}...\nError: {e}")
 
 
 def create_stored_procedures(server, database, username, password, sql_files_directory):
@@ -28,7 +30,12 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
             f"DRIVER={{ODBC Driver 17 for SQL Server}};SERVER={server};DATABASE={database};UID={username};PWD={password}"
         )
         cursor = connection.cursor()
-        print(f"Connected to server: {server}, database: {database}")
+
+        # Confirm connected database
+        cursor.execute("SELECT DB_NAME() AS CurrentDatabase")
+        row = cursor.fetchone()
+        print(
+            f"Connected to server: {server}, database: {row.CurrentDatabase}")
 
         # Iterate over all .sql files in the specified directory
         for filename in os.listdir(sql_files_directory):
@@ -44,9 +51,12 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
                 with open(file_path, "r", encoding=encoding) as sql_file:
                     sql_script = sql_file.read()
 
-                # Replace the USE statement with the target database name
-                sql_script = sql_script.replace(
-                    "USE [previous_databse]", f"USE [{database}]")
+                # Remove any existing USE [SomeDatabase] statements
+                sql_script = re.sub(
+                    r'(?i)^\s*USE\s+\[.*?\]\s*\n?', '', sql_script)
+
+                # Insert the correct USE [DB] and GO at the top
+                sql_script = f"USE [{database}]\nGO\n{sql_script.strip()}"
 
                 # Execute the SQL script in batches
                 try:
@@ -66,13 +76,13 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
 
 
 # Input parameters
-server = "your_server"  # Replace with your SQL Server name or IP
-database = "your_database"  # Replace with your target database name
-username = "your_username"  # Replace with your SQL Server username
-password = "your_password"  # Replace with your SQL Server password
+server = "*****"
+database = "*****"
+username = "*****"
+password = "*****"
 
-# Replace with the path to your .sql files
-sql_files_directory = r"your_sql_files_directory"
+# Directory containing your .sql files
+sql_files_directory = r"D:\Softwares\Neco App\SPs"
 
 # Call the function
 create_stored_procedures(server, database, username,
