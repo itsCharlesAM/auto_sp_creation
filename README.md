@@ -2,8 +2,10 @@
 
 If you have problem with creating a lot of Stored Procedures (or any other `.sql` scripts) on serveral databases, you are in the right place!
 
-You can see the app in this path `auto_sp_creation_app\dist\main.exe`
+You can see the app in this path `app\auto_sp_creation.exe`
 This app reads `.sql` files from a specified directory and executes them on a Microsoft SQL Server database. It supports encoding detection and batch execution using `pyodbc`.
+
+![alt text](image.png)
 
 ## Features
 
