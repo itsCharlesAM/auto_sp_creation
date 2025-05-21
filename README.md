@@ -2,13 +2,16 @@
 
 If you have problem with creating a lot of Stored Procedures (or any other `.sql` scripts) on serveral databases, you are in the right place!
 
-This Python script reads `.sql` files from a specified directory and executes them on a Microsoft SQL Server database. It supports encoding detection and batch execution using `pyodbc`.
+You can see the app in this path `auto_sp_creation_app\dist\main.exe`
+This app reads `.sql` files from a specified directory and executes them on a Microsoft SQL Server database. It supports encoding detection and batch execution using `pyodbc`.
 
 ## Features
 
-- **Auto Encoding Detection**: Detects file encoding using `chardet` to prevent encoding issues.
-- **Batch Execution**: Splits SQL scripts by `GO` statements and executes them safely.
-- **Dynamic Database Selection**: Replaces `USE [previous_databse]` with the target database name.
+- **Dynamic Database Selection**: you can target database name and SQL login for the server.
+
+- **Test connection**
+
+- **Select the files**: select the `.sql` files you want.
 - **Error Handling**: Logs execution errors without stopping the entire process.
 
 ## Requirements
@@ -29,19 +32,10 @@ This Python script reads `.sql` files from a specified directory and executes th
    pip install pyodbc chardet
 
 ## Usage
-1. Update the script with your SQL Server credentials:
-   ```sh
-    server = "your_server"
-    database = "your_database"
-    username = "your_username"
-    password = "your_password"
-    sql_files_directory = r"your_sql_files_directory"
+1. Fill the your SQL Server credentials in SQL Server Connection section.
+then you can test the connection.
 
-2. Run the script:
-   ```sh
-    python script.py
+2. select the file you want to execute and Done!
 
 ## Notes
-- Ensure the `.sql` files in `sql_files_directory` are correctly formatted.
-- Requires `ODBC Driver 17 for SQL Server` installed on the system.
-- Handles encoding issues automatically.
+- Ensure the `.sql` files in your directory are correctly formatted.
