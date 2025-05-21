@@ -76,10 +76,10 @@ def create_stored_procedures(server, database, username, password, sql_files_dir
 
 
 # Input parameters
-server = "*****"
-database = "*****"
-username = "*****"
-password = "*****"
+server = "185.252.86.138"
+database = "PGPC"
+username = "Nusr01"
+password = "Neco$$7860"
 
 # Directory containing your .sql files
 sql_files_directory = r"D:\Softwares\Neco App\SPs"
